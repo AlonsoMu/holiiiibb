@@ -25,26 +25,26 @@ DELIMITER $$
 --
 -- Procedimientos
 --
-CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_binarios_obtain` (IN `_idbook` INT)   BEGIN
+CREATE DEFINER=CURRENT_USER PROCEDURE `spu_binarios_obtain` (IN `_idbook` INT)   BEGIN
 		SELECT  idbook,frontpage,url
 				FROM books 
 			WHERE state2 = "1" AND idbook = _idbook;
 		END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_bookChinchanos_list` ()   BEGIN
+CREATE DEFINER=CURRENT_USER PROCEDURE `spu_bookChinchanos_list` ()   BEGIN
 			SELECT  idbookChinchano, descriptions, author, state, url, frontpage
 				FROM BooksChinchanos
 			WHERE state = "1";
 		END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_bookscategory_list` (IN `_idsubcategorie` INT)   BEGIN
+CREATE DEFINER=CURRENT_USER PROCEDURE `spu_bookscategory_list` (IN `_idsubcategorie` INT)   BEGIN
 		SELECT  b.descriptions, b.author,b.frontpage
 			FROM books b
 		INNER JOIN subcategories c ON c.idsubcategorie = b.idsubcategorie
 		WHERE _idsubcategorie = b.idsubcategorie;
 	END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_booksmainview_list` ()   BEGIN
+CREATE DEFINER=CURRENT_USER PROCEDURE `spu_booksmainview_list` ()   BEGIN
 				SELECT  bs.idbook,bs.descriptions,bs.author,bs.frontpage, round(SUM(cm.score) / count(cm.idcommentary))  as total
 					FROM books bs
 				left join commentaries cm on cm.idbook = bs.idbook
@@ -52,7 +52,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_booksmainview_list` ()   BEGIN
 				group by bs.idbook;
 			END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_bookssubcategory_list` (IN `_idsubcategorie` INT)   BEGIN
+CREATE DEFINER=CURRENT_USER PROCEDURE `spu_bookssubcategory_list` (IN `_idsubcategorie` INT)   BEGIN
 				SELECT  b.idbook,b.descriptions, b.author,b.frontpage,ROUND(SUM(cm.score) / COUNT(cm.idcommentary))  AS total
 					FROM books b
 				INNER JOIN subcategories c ON c.idsubcategorie = b.idsubcategorie
@@ -61,7 +61,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_bookssubcategory_list` (IN `_id
 				GROUP BY b.idbook;
 			END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_booksummaries_list` (IN `_idbook` INT)   BEGIN
+CREATE DEFINER=CURRENT_USER PROCEDURE `spu_booksummaries_list` (IN `_idbook` INT)   BEGIN
 					SELECT  bs.idbook,bs.summary, bs.author, bs.frontpage,bs.descriptions, bs.url, bs.amount,
 						ROUND(SUM(cm.score) / COUNT(cm.idcommentary))  AS total
 						FROM books bs
@@ -70,11 +70,11 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_booksummaries_list` (IN `_idboo
 					GROUP BY bs.idbook;		
 			END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_books_delete` (IN `_idbook` INT)   BEGIN
+CREATE DEFINER=CURRENT_USER PROCEDURE `spu_books_delete` (IN `_idbook` INT)   BEGIN
 		UPDATE books SET state2 = '0' WHERE idbook = _idbook;
 	END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_books_list` ()   BEGIN
+CREATE DEFINER=CURRENT_USER PROCEDURE `spu_books_list` ()   BEGIN
 			SELECT  b.idbook, b.idcategorie, ca.categoryname, c.subcategoryname, b.codes, b.amount, b.descriptions,
 				b.author, b.state, b.locationresponsible, b.url, b.frontpage
 				FROM books b
@@ -83,7 +83,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_books_list` ()   BEGIN
 			WHERE b.state2 = "1";
 		END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_books_lookfor` (IN `_type` CHAR(1), IN `_look` VARCHAR(150))   BEGIN
+CREATE DEFINER=CURRENT_USER PROCEDURE `spu_books_lookfor` (IN `_type` CHAR(1), IN `_look` VARCHAR(150))   BEGIN
 				IF _type = "n" THEN
 					SELECT b.idbook,b.frontpage, b.descriptions, b.author, ROUND(SUM(cm.score) / COUNT(cm.idcommentary))  AS total
 					FROM books b
@@ -101,14 +101,14 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_books_lookfor` (IN `_type` CHAR
 				END IF;
 			END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_books_obtain` (IN `_idbook` INT)   BEGIN
+CREATE DEFINER=CURRENT_USER PROCEDURE `spu_books_obtain` (IN `_idbook` INT)   BEGIN
 		SELECT  idbook,idcategorie,idsubcategorie,amount, descriptions,
 				author, state, locationresponsible
 				FROM books 
 			WHERE state2 = "1" AND idbook = _idbook;
 		END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_books_register` (IN `_idcategorie` INT, IN `_idsubcategorie` INT, IN `_amount` VARCHAR(30) CHARSET utf8mb4, IN `_descriptions` VARCHAR(150) CHARSET utf8mb4, IN `_author` VARCHAR(150) CHARSET utf8mb4, IN `_state` VARCHAR(30) CHARSET utf8mb4, IN `_locationresponsible` VARCHAR(50) CHARSET utf8mb4, IN `_url` VARCHAR(150) CHARSET utf8mb4, IN `_frontpage` VARCHAR(150) CHARSET utf8mb4)   BEGIN
+CREATE DEFINER=CURRENT_USER PROCEDURE `spu_books_register` (IN `_idcategorie` INT, IN `_idsubcategorie` INT, IN `_amount` VARCHAR(30) CHARSET utf8mb4, IN `_descriptions` VARCHAR(150) CHARSET utf8mb4, IN `_author` VARCHAR(150) CHARSET utf8mb4, IN `_state` VARCHAR(30) CHARSET utf8mb4, IN `_locationresponsible` VARCHAR(50) CHARSET utf8mb4, IN `_url` VARCHAR(150) CHARSET utf8mb4, IN `_frontpage` VARCHAR(150) CHARSET utf8mb4)   BEGIN
 				DECLARE maximo VARCHAR (30);	
 				DECLARE num INT;
 				DECLARE cod VARCHAR (30);	
@@ -133,7 +133,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_books_register` (IN `_idcategor
 				INSERT INTO books(idcategorie,idsubcategorie,codes,amount,descriptions,author,state,locationresponsible,url,frontpage)VALUES(_idcategorie,_idsubcategorie,cod,_amount,_descriptions,_author,_state,_locationresponsible,_url,_frontpage);
 		END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_books_update` (IN `_idbook` INT, IN `_idcategorie` INT, IN `_idsubcategorie` INT, IN `_amount` VARCHAR(30) CHARSET utf8mb4, IN `_descriptions` VARCHAR(150) CHARSET utf8mb4, IN `_author` VARCHAR(150) CHARSET utf8mb4, IN `_state` VARCHAR(30) CHARSET utf8mb4, IN `_locationresponsible` VARCHAR(50) CHARSET utf8mb4)   BEGIN
+CREATE DEFINER=CURRENT_USER PROCEDURE `spu_books_update` (IN `_idbook` INT, IN `_idcategorie` INT, IN `_idsubcategorie` INT, IN `_amount` VARCHAR(30) CHARSET utf8mb4, IN `_descriptions` VARCHAR(150) CHARSET utf8mb4, IN `_author` VARCHAR(150) CHARSET utf8mb4, IN `_state` VARCHAR(30) CHARSET utf8mb4, IN `_locationresponsible` VARCHAR(50) CHARSET utf8mb4)   BEGIN
 			UPDATE books SET
 				idcategorie 		= _idcategorie,
 				idsubcategorie 		= _idsubcategorie,
@@ -145,7 +145,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_books_update` (IN `_idbook` INT
 			WHERE idbook = _idbook;
 		END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_cancellation_date` (IN `loan_id` INT)   BEGIN
+CREATE DEFINER=CURRENT_USER PROCEDURE `spu_cancellation_date` (IN `loan_id` INT)   BEGIN
     -- Variables para almacenar los valores del préstamo
     DECLARE loan_amount VARCHAR(30);
     DECLARE book_id INT;
@@ -164,17 +164,17 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_cancellation_date` (IN `loan_id
     WHERE idbook = book_id;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_categories_list` ()   BEGIN
+CREATE DEFINER=CURRENT_USER PROCEDURE `spu_categories_list` ()   BEGIN
 				SELECT idcategorie, categoryname,registrationdate
 					FROM categories
 				WHERE state = "1";
 			END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_categorie_delete` (IN `_idcategorie` INT)   BEGIN
+CREATE DEFINER=CURRENT_USER PROCEDURE `spu_categorie_delete` (IN `_idcategorie` INT)   BEGIN
 					UPDATE categories SET state = '0' WHERE idcategorie = _idcategorie;
 				END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_commentaries_list` (IN `_idusers` INT, IN `_accesslevel` CHAR(1))   BEGIN
+CREATE DEFINER=CURRENT_USER PROCEDURE `spu_commentaries_list` (IN `_idusers` INT, IN `_accesslevel` CHAR(1))   BEGIN
 	    IF _accesslevel = 'D' THEN
 		SELECT
 		    commentaries.idcommentary AS idcomentario,
@@ -216,11 +216,11 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_commentaries_list` (IN `_iduser
 	    END IF;
 	END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_correo_validacioncompleta` (IN `_email` VARCHAR(120) CHARSET utf8mb4)   BEGIN
+CREATE DEFINER=CURRENT_USER PROCEDURE `spu_correo_validacioncompleta` (IN `_email` VARCHAR(120) CHARSET utf8mb4)   BEGIN
 				UPDATE validacioncorreo SET estado = '0' WHERE email = _email;
 			END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_correo_validarclave` (IN `_email` VARCHAR(150) CHARSET utf8mb4, IN `_clavegenerada` CHAR(4))   BEGIN
+CREATE DEFINER=CURRENT_USER PROCEDURE `spu_correo_validarclave` (IN `_email` VARCHAR(150) CHARSET utf8mb4, IN `_clavegenerada` CHAR(4))   BEGIN
 			IF (
 			   (
 			   SELECT clavegenerada
@@ -236,7 +236,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_correo_validarclave` (IN `_emai
 			END IF;
 			END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_correo_validartiempo` (IN `_email` VARCHAR(120))   BEGIN
+CREATE DEFINER=CURRENT_USER PROCEDURE `spu_correo_validartiempo` (IN `_email` VARCHAR(120))   BEGIN
 			IF ((SELECT COUNT(*) FROM validacioncorreo WHERE email = _email) =0) THEN
 				SELECT 'GENERAR' AS 'status';
 				ELSE
@@ -263,20 +263,20 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_correo_validartiempo` (IN `_ema
 				END IF;
 			END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_delete_commentaries` (IN `_idcomentario` INT)   BEGIN
+CREATE DEFINER=CURRENT_USER PROCEDURE `spu_delete_commentaries` (IN `_idcomentario` INT)   BEGIN
 				 UPDATE commentaries
 				 SET state = 0
 				 WHERE idcommentary = _idcomentario;
 		END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_edit_categorie` (IN `_idcategorie` INT, IN `_categoryname` VARCHAR(50) CHARSET utf8mb4)   BEGIN
+CREATE DEFINER=CURRENT_USER PROCEDURE `spu_edit_categorie` (IN `_idcategorie` INT, IN `_categoryname` VARCHAR(50) CHARSET utf8mb4)   BEGIN
 					UPDATE categories SET
 						idcategorie 	= _idcategorie,
 						categoryname	= _categoryname
 					WHERE idcategorie = _idcategorie; 	
 			END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_edit_subcategorie` (IN `_idcategorie` INT, IN `_idsubcategorie` INT, IN `_subcategoryname` VARCHAR(50) CHARSET utf8mb4)   BEGIN
+CREATE DEFINER=CURRENT_USER PROCEDURE `spu_edit_subcategorie` (IN `_idcategorie` INT, IN `_idsubcategorie` INT, IN `_subcategoryname` VARCHAR(50) CHARSET utf8mb4)   BEGIN
 						UPDATE subcategories SET
 							idcategorie 	= _idcategorie,
 							idsubcategorie 	= _idsubcategorie,
@@ -284,7 +284,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_edit_subcategorie` (IN `_idcate
 						WHERE idsubcategorie = _idsubcategorie; 	
 				END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_entregar_libro` (IN `p_loan_id` INT)   BEGIN
+CREATE DEFINER=CURRENT_USER PROCEDURE `spu_entregar_libro` (IN `p_loan_id` INT)   BEGIN
     DECLARE v_pickup_date DATETIME;
     
     -- Obtener la fecha y hora actual
@@ -298,7 +298,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_entregar_libro` (IN `p_loan_id`
     SELECT 'Libro entregado exitosamente.' AS message;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_filtrar_prestamo` (IN `p_state` CHAR(1))   BEGIN
+CREATE DEFINER=CURRENT_USER PROCEDURE `spu_filtrar_prestamo` (IN `p_state` CHAR(1))   BEGIN
     IF p_state = '0' THEN
         SELECT *
         FROM loans;
@@ -309,7 +309,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_filtrar_prestamo` (IN `p_state`
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_insertorupdatecode` ()   BEGIN
+CREATE DEFINER=CURRENT_USER PROCEDURE `spu_insertorupdatecode` ()   BEGIN
 			    DECLARE codeexists INT;
 			    DECLARE newcode CHAR(8);
 			    DECLARE lastregistration DATETIME;
@@ -339,7 +339,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_insertorupdatecode` ()   BEGIN
 			    END IF;
 			END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_listar_prestamo` (IN `_idusers` INT, IN `_accesslevel` CHAR(1), IN `_estado` CHAR(1))   BEGIN
+CREATE DEFINER=CURRENT_USER PROCEDURE `spu_listar_prestamo` (IN `_idusers` INT, IN `_accesslevel` CHAR(1), IN `_estado` CHAR(1))   BEGIN
 		IF _accesslevel = 'D' THEN 
 			IF _estado = '' THEN
 				SET _estado = '1'; -- Si _estado está vacío, establece el valor predeterminado a '1'
@@ -404,11 +404,11 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_listar_prestamo` (IN `_idusers`
 			    END IF;    
 		END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_listcode` ()   begin
+CREATE DEFINER=CURRENT_USER PROCEDURE `spu_listcode` ()   begin
 				SELECT * FROM hzgstudentcodes WHERE state = 1;
 			end$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_listloans_user` (IN `_idusers` INT)   BEGIN
+CREATE DEFINER=CURRENT_USER PROCEDURE `spu_listloans_user` (IN `_idusers` INT)   BEGIN
 				SELECT 	ls.idloan,bs.idbook,ls.idusers,
 					bs.descriptions,
 					ls.loan_date,
@@ -419,7 +419,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_listloans_user` (IN `_idusers` 
 				WHERE idusers = _idusers;
 			END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_list_all_commentaries` (IN `_idbook` INT)   BEGIN 
+CREATE DEFINER=CURRENT_USER PROCEDURE `spu_list_all_commentaries` (IN `_idbook` INT)   BEGIN 
 						SELECT c.idcommentary, b.idbook, CONCAT(u.namess, ' ', u.surnames) AS Usuario,
 							c.commentary, c.score, c.commentary_date
 						FROM commentaries c
@@ -427,7 +427,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_list_all_commentaries` (IN `_id
 							INNER JOIN	users u ON u.idusers = c.idusers;
 				END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_list_commentaries` (IN `_idbook` INT)   BEGIN 
+CREATE DEFINER=CURRENT_USER PROCEDURE `spu_list_commentaries` (IN `_idbook` INT)   BEGIN 
 					SELECT c.idcommentary, b.idbook, CONCAT(u.namess, ' ', u.surnames) AS Usuario,
 						c.commentary, c.score, c.commentary_date
 					FROM commentaries c
@@ -438,7 +438,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_list_commentaries` (IN `_idbook
 					LIMIT 5;
 			END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_list_dashboard_books` ()   BEGIN
+CREATE DEFINER=CURRENT_USER PROCEDURE `spu_list_dashboard_books` ()   BEGIN
 				SELECT  COUNT(idbook) AS total_libros ,
 					(SELECT COUNT(idcategorie) FROM categories where state = 1) AS total_categorias,
 					(SELECT COUNT(idcategorie) FROM subcategories WHERE state = 1) AS total_subcategorias,
@@ -448,7 +448,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_list_dashboard_books` ()   BEGI
 				where state2 = '1';
 			END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_list_dashboard_users` ()   BEGIN
+CREATE DEFINER=CURRENT_USER PROCEDURE `spu_list_dashboard_users` ()   BEGIN
 					SELECT  COUNT(idusers) AS total_users,
 						(SELECT COUNT(*) FROM users WHERE accesslevel LIKE 'D' and state = 1) AS total_docentes,
 						(SELECT COUNT(*) FROM loans WHERE state = 1) AS total_prestamos
@@ -456,12 +456,12 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_list_dashboard_users` ()   BEGI
 					where state = 1;
 				END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_list_estado` ()   begin
+CREATE DEFINER=CURRENT_USER PROCEDURE `spu_list_estado` ()   begin
 			SELECT state FROM loans
 			group by state;
 		END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_loans_list` (IN `_idusers` INT, IN `_accesslevel` CHAR(1) CHARSET utf8mb4)   BEGIN
+CREATE DEFINER=CURRENT_USER PROCEDURE `spu_loans_list` (IN `_idusers` INT, IN `_accesslevel` CHAR(1) CHARSET utf8mb4)   BEGIN
 					if _accesslevel = 'D' THEN 
 						SELECT  s.idloan, b.descriptions, CONCAT(u.namess, ' ' , u.surnames) AS Usuario,
 							s.observation, s.loan_date, s.return_date, s.amount, s.state
@@ -489,12 +489,12 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_loans_list` (IN `_idusers` INT,
 					end if;
 			END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_loans_register` (IN `_idbook` INT, IN `_idusers` INT, IN `_observation` VARCHAR(100) CHARSET utf8mb4, IN `_loan_date` DATETIME, IN `_return_date` DATETIME, IN `_amount` VARCHAR(30) CHARSET utf8mb4)   BEGIN
+CREATE DEFINER=CURRENT_USER PROCEDURE `spu_loans_register` (IN `_idbook` INT, IN `_idusers` INT, IN `_observation` VARCHAR(100) CHARSET utf8mb4, IN `_loan_date` DATETIME, IN `_return_date` DATETIME, IN `_amount` VARCHAR(30) CHARSET utf8mb4)   BEGIN
 					INSERT INTO loans(idbook,idusers,observation,loan_date,return_date,amount)
 					VALUES(_idbook,_idusers,_observation,_loan_date,_return_date,_amount);	
 			END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_loan_registration` (IN `_idbook` INT, IN `_idusers` INT, IN `_amount` VARCHAR(30), IN `_pickup_date` DATETIME, IN `_return_date` DATETIME, IN `_cancellation_date` DATETIME, IN `_observation` VARCHAR(200))   BEGIN
+CREATE DEFINER=CURRENT_USER PROCEDURE `spu_loan_registration` (IN `_idbook` INT, IN `_idusers` INT, IN `_amount` VARCHAR(30), IN `_pickup_date` DATETIME, IN `_return_date` DATETIME, IN `_cancellation_date` DATETIME, IN `_observation` VARCHAR(200))   BEGIN
 	    DECLARE v_book_amount INT;
 	    -- Verificar si el libro existe y tiene una cantidad disponible mayor a 0
 	    SELECT amount INTO v_book_amount
@@ -524,26 +524,26 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_loan_registration` (IN `_idbook
 	    END IF;
 	END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_mainviewcategories_list` ()   BEGIN
+CREATE DEFINER=CURRENT_USER PROCEDURE `spu_mainviewcategories_list` ()   BEGIN
 			SELECT s.idcategorie, b.idsubcategorie, s.categoryname, b.subcategoryname
 				FROM subcategories b
 			inner join categories s on s.idcategorie = b.idcategorie;
 			
 		END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_obtain_categorie` (IN `_idcategorie` INT)   BEGIN
+CREATE DEFINER=CURRENT_USER PROCEDURE `spu_obtain_categorie` (IN `_idcategorie` INT)   BEGIN
 					SELECT idcategorie, categoryname 
 						FROM categories
 					WHERE idcategorie = _idcategorie;
 			END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_obtain_subcategorie` (IN `_idsubcategorie` INT)   BEGIN
+CREATE DEFINER=CURRENT_USER PROCEDURE `spu_obtain_subcategorie` (IN `_idsubcategorie` INT)   BEGIN
 						SELECT idcategorie,idsubcategorie, subcategoryname 
 							FROM subcategories
 						WHERE idsubcategorie = _idsubcategorie;
 				END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_obtener_Comentario` (IN `p_idcomentario` INT)   BEGIN
+CREATE DEFINER=CURRENT_USER PROCEDURE `spu_obtener_Comentario` (IN `p_idcomentario` INT)   BEGIN
     SELECT idcommentary, idusers, idbook, commentary
     FROM commentaries
     WHERE idcommentary = p_idcomentario
@@ -551,52 +551,52 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_obtener_Comentario` (IN `p_idco
         AND state = '1';
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_obtener_stock` (IN `_idbook` INT)   BEGIN
+CREATE DEFINER=CURRENT_USER PROCEDURE `spu_obtener_stock` (IN `_idbook` INT)   BEGIN
 					SELECT * FROM books
 					WHERE _idbook = idbook;
 			END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_obtener_stocklibro` (IN `_idbook` INT)   BEGIN
+CREATE DEFINER=CURRENT_USER PROCEDURE `spu_obtener_stocklibro` (IN `_idbook` INT)   BEGIN
 					SELECT * FROM books
 					WHERE _idbook = idbook;
 			END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_order_user` (IN `_iduser` VARCHAR(255) CHARSET utf8mb4)   BEGIN
+CREATE DEFINER=CURRENT_USER PROCEDURE `spu_order_user` (IN `_iduser` VARCHAR(255) CHARSET utf8mb4)   BEGIN
 	SELECT us.idusers, us.username, us.surnames, us.namess, us.email, us.accesslevel
 		FROM users us
 		WHERE FIND_IN_SET(us.accesslevel, _iduser) > 0
 	ORDER BY us.accesslevel ASC, us.username ASC;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_pickup_date` (IN `p_idloan` INT, IN `p_pickup_date` DATETIME)   BEGIN
+CREATE DEFINER=CURRENT_USER PROCEDURE `spu_pickup_date` (IN `p_idloan` INT, IN `p_pickup_date` DATETIME)   BEGIN
     UPDATE loans
     SET pickup_date = p_pickup_date,
         state = '2'
     WHERE idloan = p_idloan;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_productos_obtener` (IN `_idproducto` INT)   BEGIN
+CREATE DEFINER=CURRENT_USER PROCEDURE `spu_productos_obtener` (IN `_idproducto` INT)   BEGIN
 SELECT idproducto, idclasificacion, idmarca, descripcion, esnuevo, numeroserie, precio
 	FROM productos
 	WHERE estado = '1' AND idproducto = _idproducto;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_register_categorie` (IN `_categoryname` VARCHAR(50) CHARSET utf8mb4)   BEGIN
+CREATE DEFINER=CURRENT_USER PROCEDURE `spu_register_categorie` (IN `_categoryname` VARCHAR(50) CHARSET utf8mb4)   BEGIN
 					INSERT INTO categories(categoryname)
 					VALUES(_categoryname);
 			END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_register_commentaries` (IN `_idbook` INT, IN `_idusers` INT, IN `_commentary` VARCHAR(250) CHARSET utf8mb4, IN `_score` INT)   BEGIN
+CREATE DEFINER=CURRENT_USER PROCEDURE `spu_register_commentaries` (IN `_idbook` INT, IN `_idusers` INT, IN `_commentary` VARCHAR(250) CHARSET utf8mb4, IN `_score` INT)   BEGIN
 					INSERT INTO commentaries(idbook,idusers,commentary,score)
 					VALUES(_idbook,_idusers,_commentary,_score);
 			END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_register_subcategorie` (IN `_idcategorie` INT, IN `_subcategoryname` VARCHAR(50) CHARSET utf8mb4)   BEGIN
+CREATE DEFINER=CURRENT_USER PROCEDURE `spu_register_subcategorie` (IN `_idcategorie` INT, IN `_subcategoryname` VARCHAR(50) CHARSET utf8mb4)   BEGIN
 					INSERT INTO subcategories(idcategorie, subcategoryname)
 					VALUES(_idcategorie,_subcategoryname);
 			END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_registration_date` (IN `_idbook` INT, IN `_idusers` INT, IN `_amount` VARCHAR(30), IN `_pickup_date` DATETIME, IN `_return_date` DATETIME, IN `_cancellation_date` DATETIME, IN `_observation` VARCHAR(200))   BEGIN
+CREATE DEFINER=CURRENT_USER PROCEDURE `spu_registration_date` (IN `_idbook` INT, IN `_idusers` INT, IN `_amount` VARCHAR(30), IN `_pickup_date` DATETIME, IN `_return_date` DATETIME, IN `_cancellation_date` DATETIME, IN `_observation` VARCHAR(200))   BEGIN
 	    DECLARE v_book_amount INT;
 	    -- Verificar si el libro existe y tiene una cantidad disponible mayor a 0
 	    SELECT amount INTO v_book_amount
@@ -626,17 +626,17 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_registration_date` (IN `_idbook
 	    END IF;
 	END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_registra_claverecuperacion` (IN `_idusers` INT, IN `_email` VARCHAR(120), IN `_clavegenerada` CHAR(4))   BEGIN
+CREATE DEFINER=CURRENT_USER PROCEDURE `spu_registra_claverecuperacion` (IN `_idusers` INT, IN `_email` VARCHAR(120), IN `_clavegenerada` CHAR(4))   BEGIN
 			UPDATE recuperarclave SET estado = '0' WHERE idusers = _idusers;
 			INSERT INTO recuperarclave (idusers, email, clavegenerada) VALUES (_idusers, _email, _clavegenerada);
 		END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_registra_clavevalidacioncorreo` (IN `_email` VARCHAR(120) CHARSET utf8mb4, IN `_clavegenerada` CHAR(4))   BEGIN
+CREATE DEFINER=CURRENT_USER PROCEDURE `spu_registra_clavevalidacioncorreo` (IN `_email` VARCHAR(120) CHARSET utf8mb4, IN `_clavegenerada` CHAR(4))   BEGIN
 	UPDATE validacioncorreo SET estado = '0' WHERE email = _email;
 	INSERT INTO validacioncorreo (email, clavegenerada) VALUES (_email, _clavegenerada);
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_reporte_comentario` (IN `_idbook` INT, IN `_anio` CHAR(4), IN `_mes` CHAR(2), IN `_accesslevel` CHAR(1))   BEGIN
+CREATE DEFINER=CURRENT_USER PROCEDURE `spu_reporte_comentario` (IN `_idbook` INT, IN `_anio` CHAR(4), IN `_mes` CHAR(2), IN `_accesslevel` CHAR(1))   BEGIN
 	  IF _anio IS NOT NULL AND _mes IS NOT NULL AND _anio != '' AND _mes != '' THEN
 		IF _accesslevel = 'D' THEN 
 		    SELECT
@@ -698,7 +698,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_reporte_comentario` (IN `_idboo
 	END IF;
 	END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_reporte_libro` (IN `_idcategorie` INT, IN `_idsubcategorie` INT)   BEGIN
+CREATE DEFINER=CURRENT_USER PROCEDURE `spu_reporte_libro` (IN `_idcategorie` INT, IN `_idsubcategorie` INT)   BEGIN
 			  IF _idsubcategorie IS NULL || _idsubcategorie = '' THEN
 				SELECT  b.idbook, ca.categoryname, c.subcategoryname, b.codes, b.amount, b.descriptions,
 					b.author, b.state, b.locationresponsible
@@ -718,7 +718,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_reporte_libro` (IN `_idcategori
 			END IF;
 			END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_reporte_prestamos` (IN `_idbook` INT, IN `_anio` CHAR(4), IN `_mes` CHAR(2), IN `_estado` CHAR(1))   BEGIN
+CREATE DEFINER=CURRENT_USER PROCEDURE `spu_reporte_prestamos` (IN `_idbook` INT, IN `_anio` CHAR(4), IN `_mes` CHAR(2), IN `_estado` CHAR(1))   BEGIN
 		    IF _anio IS NOT NULL AND _mes IS NOT NULL AND _estado IS NOT NULL AND _anio != '' AND _mes != '' AND _estado != '' THEN
 			SELECT loans.idloan,
 			   books.descriptions AS Titulo,
@@ -795,7 +795,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_reporte_prestamos` (IN `_idbook
 		    END IF;
 		END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_report_subcategoria` (IN `_idcategorie` VARCHAR(255))   BEGIN
+CREATE DEFINER=CURRENT_USER PROCEDURE `spu_report_subcategoria` (IN `_idcategorie` VARCHAR(255))   BEGIN
 				SELECT sub.idsubcategorie, cat.categoryname,sub.subcategoryname,sub.registrationdate
 					FROM subcategories sub
 					INNER JOIN categories cat ON cat.idcategorie = sub.idcategorie
@@ -803,7 +803,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_report_subcategoria` (IN `_idca
 				ORDER BY sub.idsubcategorie ASC;
 			END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_return_date` (IN `p_idloan` INT, IN `p_acotacion` VARCHAR(200))   BEGIN
+CREATE DEFINER=CURRENT_USER PROCEDURE `spu_return_date` (IN `p_idloan` INT, IN `p_acotacion` VARCHAR(200))   BEGIN
     -- Actualizar la fecha de retorno y el estado del préstamo
     UPDATE loans
     SET return_date = NOW(),
@@ -816,7 +816,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_return_date` (IN `p_idloan` INT
     WHERE idbook = (SELECT idbook FROM loans WHERE idloan = p_idloan);
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_searchuser` (IN `_username` VARCHAR(150) CHARSET utf8mb4)   BEGIN
+CREATE DEFINER=CURRENT_USER PROCEDURE `spu_searchuser` (IN `_username` VARCHAR(150) CHARSET utf8mb4)   BEGIN
 	  SELECT 
 		idusers,
 		username,
@@ -827,7 +827,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_searchuser` (IN `_username` VAR
 		WHERE username = _username AND state = '1';
 	 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_search_users_loans` (IN `_idusers` INT)   BEGIN
+CREATE DEFINER=CURRENT_USER PROCEDURE `spu_search_users_loans` (IN `_idusers` INT)   BEGIN
 		  DECLARE record_count INT;
 		  DECLARE user_accesslevel CHAR(1);
 		  -- Obtener el accesslevel del usuario
@@ -857,17 +857,17 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_search_users_loans` (IN `_iduse
 		  END IF;
 		END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_stock_libro` (IN `_idbook` INT)   BEGIN
+CREATE DEFINER=CURRENT_USER PROCEDURE `spu_stock_libro` (IN `_idbook` INT)   BEGIN
 					SELECT * FROM books
 					WHERE _idbook = idbook;
 			END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_subcategories2_list` ()   BEGIN
+CREATE DEFINER=CURRENT_USER PROCEDURE `spu_subcategories2_list` ()   BEGIN
 			SELECT idsubcategorie, subcategoryname
 				FROM subcategories;
 		END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_subcategories3_list` ()   BEGIN
+CREATE DEFINER=CURRENT_USER PROCEDURE `spu_subcategories3_list` ()   BEGIN
 				SELECT sub.idsubcategorie, cat.categoryname,sub.subcategoryname,sub.registrationdate
 					FROM subcategories sub
 					INNER JOIN categories cat ON cat.idcategorie = sub.idcategorie
@@ -875,79 +875,79 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_subcategories3_list` ()   BEGIN
 					
 			END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_subcategories_list` (IN `_idcategorie` INT)   BEGIN
+CREATE DEFINER=CURRENT_USER PROCEDURE `spu_subcategories_list` (IN `_idcategorie` INT)   BEGIN
 				SELECT idsubcategorie, subcategoryname
 					FROM subcategories
 					WHERE _idcategorie = idcategorie AND state = '1';
 			END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_subcategorie_delete` (IN `_idsubcategorie` INT)   BEGIN
+CREATE DEFINER=CURRENT_USER PROCEDURE `spu_subcategorie_delete` (IN `_idsubcategorie` INT)   BEGIN
 				UPDATE subcategories SET state = '0' WHERE idsubcategorie = _idsubcategorie;
 			END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_update_frontpage` (IN `_idbook` INT, IN `_frontpage` VARCHAR(150) CHARSET utf8mb4)   BEGIN
+CREATE DEFINER=CURRENT_USER PROCEDURE `spu_update_frontpage` (IN `_idbook` INT, IN `_frontpage` VARCHAR(150) CHARSET utf8mb4)   BEGIN
 			    UPDATE books
 			    SET frontpage = _frontpage
 			    WHERE idbook = _idbook;
 			END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_update_pdf` (IN `_idbook` INT, IN `_url` VARCHAR(250) CHARSET utf8mb4)   BEGIN
+CREATE DEFINER=CURRENT_USER PROCEDURE `spu_update_pdf` (IN `_idbook` INT, IN `_url` VARCHAR(250) CHARSET utf8mb4)   BEGIN
 			    UPDATE books
 			    SET url = _url
 			    WHERE idbook = _idbook;
 			END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_update_users` (IN `_idusers` INT, IN `_accesskey` VARCHAR(100) CHARSET utf8mb4)   BEGIN
+CREATE DEFINER=CURRENT_USER PROCEDURE `spu_update_users` (IN `_idusers` INT, IN `_accesskey` VARCHAR(100) CHARSET utf8mb4)   BEGIN
 					UPDATE users SET
 					accesskey 	= _accesskey
 					WHERE idusers = _idusers;
 			END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_usersloans_list` ()   BEGIN
+CREATE DEFINER=CURRENT_USER PROCEDURE `spu_usersloans_list` ()   BEGIN
 				SELECT idusers, CONCAT(namess, ' ' , surnames)as Users
 				FROM users;
 		END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_users_contraseña` (IN `_email` VARCHAR(100) CHARSET utf8mb4)   BEGIN
+CREATE DEFINER=CURRENT_USER PROCEDURE `spu_users_contraseña` (IN `_email` VARCHAR(100) CHARSET utf8mb4)   BEGIN
 				SELECT idusers, surnames, namess, email, accesskey, accesslevel
 					FROM users
 					WHERE email = _email AND state = '1';
 			END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_users_disable` (IN `_idusers` INT)   BEGIN
+CREATE DEFINER=CURRENT_USER PROCEDURE `spu_users_disable` (IN `_idusers` INT)   BEGIN
 			UPDATE users SET state = '0' WHERE idusers = _idusers;
 		END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_users_list` ()   BEGIN
+CREATE DEFINER=CURRENT_USER PROCEDURE `spu_users_list` ()   BEGIN
 				SELECT  idusers, username, surnames, namess, email, accesslevel
 					FROM users
 					WHERE state = "1";
 			END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_users_login` (IN `_email` VARCHAR(100) CHARSET utf8mb4)   BEGIN
+CREATE DEFINER=CURRENT_USER PROCEDURE `spu_users_login` (IN `_email` VARCHAR(100) CHARSET utf8mb4)   BEGIN
 				SELECT idusers, surnames, namess, email, accesskey, accesslevel,state
 					FROM users
 					WHERE email = _email AND state = '1';
 			END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_users_obtain` (IN `_idusers` INT)   BEGIN
+CREATE DEFINER=CURRENT_USER PROCEDURE `spu_users_obtain` (IN `_idusers` INT)   BEGIN
 				SELECT  idusers, namess, username,surnames, accesslevel,email,accesskey
 						FROM users 
 					WHERE state = "1" AND idusers = _idusers;
 			END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_users_password` (IN `_idusers` INT, IN `_accesskey` VARCHAR(100))   BEGIN
+CREATE DEFINER=CURRENT_USER PROCEDURE `spu_users_password` (IN `_idusers` INT, IN `_accesskey` VARCHAR(100))   BEGIN
 				UPDATE users SET
 					accesskey = _accesskey	
 				WHERE idusers = _idusers;
 			END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_users_register` (IN `_username` VARCHAR(50) CHARSET utf8mb4, IN `_surnames` VARCHAR(30) CHARSET utf8mb4, IN `_namess` VARCHAR(30) CHARSET utf8mb4, IN `_email` VARCHAR(100) CHARSET utf8mb4, IN `_accesskey` VARCHAR(100) CHARSET utf8mb4, IN `_accesslevel` VARCHAR(100) CHARSET utf8mb4)   BEGIN
+CREATE DEFINER=CURRENT_USER PROCEDURE `spu_users_register` (IN `_username` VARCHAR(50) CHARSET utf8mb4, IN `_surnames` VARCHAR(30) CHARSET utf8mb4, IN `_namess` VARCHAR(30) CHARSET utf8mb4, IN `_email` VARCHAR(100) CHARSET utf8mb4, IN `_accesskey` VARCHAR(100) CHARSET utf8mb4, IN `_accesslevel` VARCHAR(100) CHARSET utf8mb4)   BEGIN
 				INSERT INTO users (username,surnames, namess, email, accesskey, accesslevel) VALUES
 				(_username, _surnames, _namess, _email, _accesskey, _accesslevel);
 			END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_users_update` (IN `_idusers` INT, IN `_namess` VARCHAR(30), IN `_surnames` VARCHAR(100), IN `_username` VARCHAR(50), IN `_email` VARCHAR(100), IN `_accesslevel` VARCHAR(100))   BEGIN
+CREATE DEFINER=CURRENT_USER PROCEDURE `spu_users_update` (IN `_idusers` INT, IN `_namess` VARCHAR(30), IN `_surnames` VARCHAR(100), IN `_username` VARCHAR(50), IN `_email` VARCHAR(100), IN `_accesslevel` VARCHAR(100))   BEGIN
 				UPDATE users SET
 					namess 		= _namess,
 					surnames 	= _surnames,
@@ -958,12 +958,12 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_users_update` (IN `_idusers` IN
 				WHERE idusers = _idusers;
 			END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_usuario_actualizarpasssword` (IN `_idusers` INT, IN `_accesskey` VARCHAR(100))   BEGIN
+CREATE DEFINER=CURRENT_USER PROCEDURE `spu_usuario_actualizarpasssword` (IN `_idusers` INT, IN `_accesskey` VARCHAR(100))   BEGIN
     UPDATE users SET accesskey = _accesskey WHERE idusers = _idusers;
     UPDATE recuperarclave SET estado = '0' WHERE idusers = _idusers;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_usuario_validarclave` (IN `_idusers` INT, IN `_clavegenerada` CHAR(4))   BEGIN
+CREATE DEFINER=CURRENT_USER PROCEDURE `spu_usuario_validarclave` (IN `_idusers` INT, IN `_clavegenerada` CHAR(4))   BEGIN
     IF (
         (
         SELECT clavegenerada
@@ -979,7 +979,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_usuario_validarclave` (IN `_idu
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_usuario_validartiempo` (IN `_idusers` INT)   BEGIN
+CREATE DEFINER=CURRENT_USER PROCEDURE `spu_usuario_validartiempo` (IN `_idusers` INT)   BEGIN
 			IF ((SELECT COUNT(*) FROM recuperarclave WHERE idusers = _idusers) =0) THEN
 				SELECT 'GENERAR' AS 'status';
 				ELSE
@@ -1006,7 +1006,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_usuario_validartiempo` (IN `_id
 				END IF;
 		END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_validatecode` (IN `_code` CHAR(8))   BEGIN
+CREATE DEFINER=CURRENT_USER PROCEDURE `spu_validatecode` (IN `_code` CHAR(8))   BEGIN
 			    DECLARE codeexists INT;
 			    
 			    SELECT COUNT(*) INTO codeexists FROM hzgstudentcodes WHERE codes = _code AND state = 1;
@@ -1018,19 +1018,19 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_validatecode` (IN `_code` CHAR(
 			    END IF;
 			END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_validate_email` (IN `_email` VARCHAR(100) CHARSET utf8mb4)   BEGIN
+CREATE DEFINER=CURRENT_USER PROCEDURE `spu_validate_email` (IN `_email` VARCHAR(100) CHARSET utf8mb4)   BEGIN
 					SELECT email 
 						FROM users
 					WHERE email = _email;
 			END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `spu_validate_username` (IN `_username` VARCHAR(100) CHARSET utf8mb4)   BEGIN
+CREATE DEFINER=CURRENT_USER PROCEDURE `spu_validate_username` (IN `_username` VARCHAR(100) CHARSET utf8mb4)   BEGIN
 				SELECT username 
 					FROM users
 				WHERE username = _username;
 		END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_grafico_reporte` (IN `_mes` INT, IN `_anio` INT)   BEGIN
+CREATE DEFINER=CURRENT_USER PROCEDURE `sp_grafico_reporte` (IN `_mes` INT, IN `_anio` INT)   BEGIN
     SELECT b.descriptions AS Titulo, COUNT(*) AS Cantidad
     FROM loans l
     INNER JOIN books b ON l.idbook = b.idbook
